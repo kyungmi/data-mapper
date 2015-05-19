@@ -6,6 +6,7 @@
     "scripts": {
         "test": "mocha -R spec -u bdd"
     },
+    "main": "./lib/data-mapper.js",
     "dependencies": {
         "debug": "~2.1.1",
         "morgan": "~1.5.1",
