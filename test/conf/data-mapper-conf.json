@@ -1,6 +1,7 @@
 {
     "connectors": {
         "mysql": {
+            "type": "mysql",
             "connectionLimit": 5,
             "host": "172.21.101.124",
             "user": "test",
@@ -13,7 +14,7 @@
         "user": "test/conf/mapper/user-mapper.json5",
         "user2": {
             "connector": "mysql",
-            "setting": "conf/mapper/user-mapper2.json5"
+            "setting": "test/conf/mapper/user-mapper2.json5"
         }
     }
 }

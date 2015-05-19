@@ -32,41 +32,41 @@ describe('Use useDao', function () {
         });
     });
 
-    //describe('use transaction', function () {
-    //    var userId = 1;
-    //    var updateUser = {id:userId, name: 'updatedUser', phone: 'updatephone'};
-    //    var transaction = new Transaction([
-    //        //userDao.deleteAllUser(),
-    //        userDao.getUsers(),
-    //        function(connection, result, next){
-    //            if(!_.isEmpty(result)){
-    //                var maxUser = _.max(result, function(user){
-    //                    return user.id;
-    //                });
-    //                userId = maxUser.id + 1;
-    //            }
-    //            userDao.addUser({id:userId, name:'newUser', phone: '12342321321312'}, connection, function(err, result){
-    //                next(err, connection, userId);
-    //            });
-    //        },
-    //        function(connection, userId, next) {
-    //            userDao.modifyUser(updateUser, connection, function(err, result){
-    //                next(err, connection, userId);
-    //            });
-    //        }
-    //    ]);
-    //    it('user', function(done){
-    //        transaction.start(function (err, userId) {
-    //            if (!err) {
-    //                userDao.getUserById({id: userId}, function (err, result) {
-    //                    assert.equal(result.length, 0);
-    //                    assert.deepEqual(result[0], updateUser);
-    //                });
-    //            }
-    //            done(err);
-    //        });
-    //    });
-    //});
+    describe('use transaction', function () {
+        var userId = 1;
+        var updateUser = {id:userId, name: 'updatedUser', phone: 'updatephone'};
+        var transaction = new Transaction([
+            //userDao.deleteAllUser(),
+            userDao.getUsers(),
+            function(connection, result, next){
+                if(!_.isEmpty(result)){
+                    var maxUser = _.max(result, function(user){
+                        return user.id;
+                    });
+                    userId = maxUser.id + 1;
+                }
+                userDao.addUser({id:userId, name:'newUser', phone: '12342321321312'}, connection, function(err, result){
+                    next(err, connection, userId);
+                });
+            },
+            function(connection, userId, next) {
+                userDao.modifyUser(updateUser, connection, function(err, result){
+                    next(err, connection, userId);
+                });
+            }
+        ]);
+        it('user', function(done){
+            transaction.start(function (err, userId) {
+                if (!err) {
+                    userDao.getUserById({id: userId}, function (err, result) {
+                        assert.equal(result.length, 0);
+                        assert.deepEqual(result[0], updateUser);
+                    });
+                }
+                done(err);
+            });
+        });
+    });
 });
 
 //userDao.addUser({id: 0, name: 'username', phone: '111-222-3333'}, function(err, result){
