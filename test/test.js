@@ -38,32 +38,34 @@ describe('Use useDao', function () {
         var transaction = new Transaction([
             //userDao.deleteAllUser(),
             userDao.getUsers(),
-            function(connection, result, next){
-                if(!_.isEmpty(result)){
-                    var maxUser = _.max(result, function(user){
+            function(context, next){
+                if(!_.isEmpty(context.getData(0))){
+                    var maxUser = _.max(context.getData(0), function(user){
                         return user.id;
                     });
                     userId = maxUser.id + 1;
+                    updateUser.id = userId;
                 }
-                userDao.addUser({id:userId, name:'newUser', phone: '12342321321312'}, connection, function(err, result){
-                    next(err, connection, userId);
-                });
+                userDao.addUser({id:userId, name:'newUser', phone: '12342321321312'}, function(err){
+                    context.setData(userId);
+                    next(err);
+                }, context);
             },
-            function(connection, userId, next) {
-                userDao.modifyUser(updateUser, connection, function(err, result){
-                    next(err, connection, userId);
-                });
+            function(context, next) {
+                userDao.modifyUser(updateUser, function(err/*, result*/){
+                    next(err);
+                }, context);
             }
         ]);
         it('user', function(done){
-            transaction.start(function (err, userId) {
+            transaction.start(function (err, context) {
                 if (!err) {
-                    userDao.getUserById({id: userId}, function (err, result) {
-                        assert.equal(result.length, 0);
+                    userDao.getUserById({id: context.getData(1)}, function (err, result) {
+                        assert.equal(result.length, 1);
                         assert.deepEqual(result[0], updateUser);
+                        done(err);
                     });
                 }
-                done(err);
             });
         });
     });
