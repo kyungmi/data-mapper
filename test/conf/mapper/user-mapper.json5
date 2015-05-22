@@ -7,5 +7,5 @@
         WHERE id = {{id}}",
     "deleteUserById": "DELETE FROM t_user WHERE id = {{id}}",
     "deleteAllUser": "DELETE FROM t_user",
-    "addUser": "INSERT INTO t_user VALUES ({{id}}, '{{name}}', '{{phone}}')"
+    "addUser": "INSERT INTO t_user VALUES ({{id}}, '{{name}}', '{{phone}}', '{{isAdmin}}')"
 }

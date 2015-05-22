@@ -1,0 +1,26 @@
+{
+    "maps": {
+        "default": {
+            "table": "t_user",
+            "columns": {
+                "id": { "key": true, "model": "userId" },
+                "name": "userName",
+                "phone": "userPhone",
+                "is_admin": { "model": "isAdmin", "handler": "boolean2Number" },
+                "create_time": { "model": "created", "type": "createTime" },
+                "update_time": { "model": "created", "type": "updateTime" }
+            }
+        }
+    },
+    "queries": {
+        "getUserById": "SELECT * FROM t_user WHERE id = {{id}}",
+        "getUsers": "SELECT * FROM t_user",
+        "modifyUser": "UPDATE t_user SET \
+            {{#if name}} name = '{{name}}' {{/if}} \
+            {{#if phone}}, phone = '{{phone}}' {{/if}} \
+            WHERE id = {{id}}",
+        "deleteUserById": "DELETE FROM t_user WHERE id = {{id}}",
+        "deleteAllUser": "DELETE FROM t_user",
+        "addUser": "INSERT INTO t_user VALUES ({{id}}, '{{name}}', '{{phone}}')"
+    }
+}

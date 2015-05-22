@@ -14,7 +14,7 @@ var Transaction = dataMapper.Transaction;
 describe('Use useDao', function () {
     describe('add and delete user', function () {
         it('add user', function (done) {
-            userDao.addUser({id: 0, name: 'username', phone: '111-222-3333'}, function (err, result) {
+            userDao.addUser({id: 0, name: 'username', phone: '111-222-3333', isAdmin: 1}, function (err, result) {
                 if (!err) {
                     assert.equal(result.affectedRows, 1);
                     assert.equal(result.insertId, 0);
@@ -34,7 +34,7 @@ describe('Use useDao', function () {
 
     describe('use transaction', function () {
         var userId = 1;
-        var updateUser = {id:userId, name: 'updatedUser', phone: 'updatephone'};
+        var updateUser = {id:userId, name: 'updatedUser', phone: 'updatephone', isAdmin: 0};
         var transaction = new Transaction([
             //userDao.deleteAllUser(),
             userDao.getUsers(),
@@ -46,7 +46,7 @@ describe('Use useDao', function () {
                     userId = maxUser.id + 1;
                     updateUser.id = userId;
                 }
-                userDao.addUser({id:userId, name:'newUser', phone: '12342321321312'}, function(err){
+                userDao.addUser({id:userId, name:'newUser', phone: '12342321321312', isAdmin: 1}, function(err){
                     context.setData(userId);
                     next(err);
                 }, context);
