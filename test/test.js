@@ -62,7 +62,10 @@ describe('Use useDao', function () {
                 if (!err) {
                     userDao.getUserById({id: context.getData(1)}, function (err, result) {
                         assert.equal(result.length, 1);
-                        assert.deepEqual(result[0], updateUser);
+                        assert.equal(result[0].id, updateUser.id);
+                        assert.equal(result[0].name, updateUser.name);
+                        assert.equal(result[0].phone, updateUser.phone);
+                        assert.equal(result[0].is_admin, updateUser.isAdmin);
                         done(err);
                     });
                 }

@@ -15,12 +15,14 @@
     "queries": {
         "getUserById": "SELECT * FROM t_user WHERE id = {{id}}",
         "getUsers": "SELECT * FROM t_user",
-        "modifyUser": "UPDATE t_user SET \
-            {{#if name}} name = '{{name}}' {{/if}} \
-            {{#if phone}}, phone = '{{phone}}' {{/if}} \
+        "modifyUser": "UPDATE t_user \
+            {#set} \
+                {#if name} name = {{name}}, {/if} \
+                {#if phone} phone = {{phone}}, {/if} \
+            {/set} \
             WHERE id = {{id}}",
         "deleteUserById": "DELETE FROM t_user WHERE id = {{id}}",
         "deleteAllUser": "DELETE FROM t_user",
-        "addUser": "INSERT INTO t_user VALUES ({{id}}, '{{name}}', '{{phone}}')"
+        "addUser": "INSERT INTO t_user VALUES ({{id}}, {{name}}, {{phone}}, 0, now(), now())"
     }
 }

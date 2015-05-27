@@ -11,7 +11,7 @@
         }
     },
     "mappers": {
-        "user": "test/conf/mapper/user-mapper.json5",
+        "user": "test/conf/mapper/new-user-mapper.json5",
         "user2": {
             "connector": "mysql",
             "setting": "test/conf/mapper/user-mapper2.json5"
