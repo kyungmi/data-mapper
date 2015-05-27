@@ -41,9 +41,9 @@ describe('Use useDao', function () {
             function(context, next){
                 if(!_.isEmpty(context.getData(0))){
                     var maxUser = _.max(context.getData(0), function(user){
-                        return user.id;
+                        return user.userId;
                     });
-                    userId = maxUser.id + 1;
+                    userId = maxUser.userId + 1;
                     updateUser.id = userId;
                 }
                 userDao.addUser({id:userId, name:'newUser', phone: '12342321321312', isAdmin: 1}, function(err){
@@ -62,10 +62,10 @@ describe('Use useDao', function () {
                 if (!err) {
                     userDao.getUserById({id: context.getData(1)}, function (err, result) {
                         assert.equal(result.length, 1);
-                        assert.equal(result[0].id, updateUser.id);
-                        assert.equal(result[0].name, updateUser.name);
-                        assert.equal(result[0].phone, updateUser.phone);
-                        assert.equal(result[0].is_admin, updateUser.isAdmin);
+                        assert.equal(result[0].userId, updateUser.id);
+                        assert.equal(result[0].userName, updateUser.name);
+                        assert.equal(result[0].userPhone, updateUser.phone);
+                        assert.equal(result[0].isAdmin, updateUser.isAdmin);
                         done(err);
                     });
                 }
@@ -76,14 +76,14 @@ describe('Use useDao', function () {
         it('$find', function(done){
            userDao.$find({userId: 1}, function(err, result){
                assert.equal(result instanceof Array, true);
-               assert.equal(result[0].id, 1);
+               assert.equal(result[0].userId, 1);
                done(err);
            });
         });
         it('$findOne', function(done){
             userDao.$findOne({userId: 1}, function(err, result){
                 assert.equal(result instanceof Object, true);
-                assert.equal(result.id, 1);
+                assert.equal(result.userId, 1);
                 done(err);
             });
         });
@@ -107,10 +107,10 @@ describe('Use useDao', function () {
                 } else {
                     assert.equal(result.affectedRows, 1);
                     userDao.$findOne({userId: 1}, function (err, result) {
-                        assert.equal(result.id, 1);
-                        assert.equal(result.name, 'username1');
-                        assert.equal(result.phone, '111-222-3333');
-                        assert.equal(result.is_admin, 1);
+                        assert.equal(result.userId, 1);
+                        assert.equal(result.userName, 'username1');
+                        assert.equal(result.userPhone, '111-222-3333');
+                        assert.equal(result.isAdmin, 1);
                         done(err);
                     });
                 }
@@ -123,10 +123,10 @@ describe('Use useDao', function () {
                 } else {
                     assert.equal(result.affectedRows, 1);
                     userDao.$findOne({userId: 1}, function (err, result) {
-                        assert.equal(result.id, 1);
-                        assert.equal(result.name, 'username1-up');
-                        assert.equal(result.phone, '111-222-4444');
-                        assert.equal(result.is_admin, 0);
+                        assert.equal(result.userId, 1);
+                        assert.equal(result.userName, 'username1-up');
+                        assert.equal(result.userPhone, '111-222-4444');
+                        assert.equal(result.isAdmin, 0);
                         done(err);
                     });
                 }
