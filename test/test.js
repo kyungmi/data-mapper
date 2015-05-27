@@ -72,6 +72,67 @@ describe('Use useDao', function () {
             });
         });
     });
+    describe('use default method', function () {
+        it('$find', function(done){
+           userDao.$find({userId: 1}, function(err, result){
+               assert.equal(result instanceof Array, true);
+               assert.equal(result[0].id, 1);
+               done(err);
+           });
+        });
+        it('$findOne', function(done){
+            userDao.$findOne({userId: 1}, function(err, result){
+                assert.equal(result instanceof Object, true);
+                assert.equal(result.id, 1);
+                done(err);
+            });
+        });
+        it('$count', function(done){
+            userDao.$count({userId: 1}, function(err, result){
+                assert.equal(typeof result, 'number');
+                assert.equal(result, 1);
+                done(err);
+            });
+        });
+        it('$remove', function(done){
+           userDao.$remove({userId: 1}, function(err, result){
+               assert.equal(result.affectedRows, 1);
+               done(err);
+           });
+        });
+        it('$save', function(done){
+            userDao.$save({userId: 1, userName: 'username1', userPhone: '111-222-3333', isAdmin: 1}, function(err, result){
+                if(err){
+                    done(err);
+                } else {
+                    assert.equal(result.affectedRows, 1);
+                    userDao.$findOne({userId: 1}, function (err, result) {
+                        assert.equal(result.id, 1);
+                        assert.equal(result.name, 'username1');
+                        assert.equal(result.phone, '111-222-3333');
+                        assert.equal(result.is_admin, 1);
+                        done(err);
+                    });
+                }
+            });
+        });
+        it('$update', function(done){
+            userDao.$update({userId: 1, $set: {userName: 'username1-up', userPhone: '111-222-4444', isAdmin: 0}}, function(err, result){
+                if(err){
+                    done(err);
+                } else {
+                    assert.equal(result.affectedRows, 1);
+                    userDao.$findOne({userId: 1}, function (err, result) {
+                        assert.equal(result.id, 1);
+                        assert.equal(result.name, 'username1-up');
+                        assert.equal(result.phone, '111-222-4444');
+                        assert.equal(result.is_admin, 0);
+                        done(err);
+                    });
+                }
+            });
+        });
+    });
 });
 
 //userDao.addUser({id: 0, name: 'username', phone: '111-222-3333'}, function(err, result){

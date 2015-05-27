@@ -6,7 +6,7 @@
                 "id": { "key": true, "model": "userId" },
                 "name": "userName",
                 "phone": "userPhone",
-                "is_admin": { "model": "isAdmin", "handler": "boolean2Number" },
+                "is_admin": { "model": "isAdmin", "handler": "boolean2Number", "type": "boolean"},
                 "create_time": { "model": "created", "type": "createTime" },
                 "update_time": { "model": "created", "type": "updateTime" }
             }
