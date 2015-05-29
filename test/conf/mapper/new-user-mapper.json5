@@ -8,7 +8,13 @@
                 "phone": "userPhone",
                 "is_admin": { "model": "isAdmin", "handler": "boolean2Number", "type": "boolean"},
                 "create_time": { "model": "created", "type": "createTime" },
-                "update_time": { "model": "created", "type": "updateTime" }
+                "update_time": { "model": "updated", "type": "updateTime" }
+            }
+        },
+        "userDetail": {
+            "table": "t_user",
+            "columns": {
+                "id": { "key": true, "model": "userId" }
             }
         }
     },
@@ -23,6 +29,14 @@
             WHERE id = {{id}}",
         "deleteUserById": "DELETE FROM t_user WHERE id = {{id}}",
         "deleteAllUser": "DELETE FROM t_user",
-        "addUser": "INSERT INTO t_user VALUES ({{id}}, {{name}}, {{phone}}, 0, now(), now())"
+        "addUser": "INSERT INTO t_user VALUES ({{id}}, {{name}}, {{phone}}, 0, now(), now())",
+        "getUserByIds": "SELECT * FROM t_user \
+        {#where} \
+            {#if list} \
+                {#foreach item=it, collection=list, sep=',', open='id IN (', close=')' } \
+                    {{it}} \
+                {/foreach} \
+            {/if} \
+        {/where}"
     }
 }

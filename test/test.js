@@ -133,6 +133,19 @@ describe('Use useDao', function () {
             });
         });
     });
+    describe('foreach', function() {
+        it('foreach', function(done){
+            userDao.getUserByIds({list:[1,2,3,4]}, function(err, result){
+                if(!err) {
+                    assert.equal(result.length <= 4, true);
+                    for (var i = 0; i < result.length; i++) {
+                        assert.equal([1, 2, 3, 4].indexOf(result[i].userId) > -1, true);
+                    }
+                }
+                done(err);
+            });
+        });
+    });
 });
 
 //userDao.addUser({id: 0, name: 'username', phone: '111-222-3333'}, function(err, result){
