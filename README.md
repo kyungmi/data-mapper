@@ -141,7 +141,7 @@ userDao.$count({isAdmin: 1}, function(err, context) {
 
 ```
 ...
-userDao.$save({userId: 100001, name: 'new user name', isAdmin: 1, phone: 'phone number'}, function(err, context) {
+userDao.$save({userId: 100001, userName: 'new user name', isAdmin: 1, userPhone: 'phone number'}, function(err, context) {
     if(err) {
         ...
     } else {
@@ -155,7 +155,7 @@ userDao.$save({userId: 100001, name: 'new user name', isAdmin: 1, phone: 'phone 
 
 ```
 ...
-userDao.$save({userId: 100001, $set: { name: 'updated user name', isAdmin: 0, phone: 'updated phone number'} }, function(err, context) {
+userDao.$update({userId: 100001, $set: { userName: 'updated user name', isAdmin: 0, userPhone: 'updated phone number'} }, function(err, context) {
     if(err) {
         ...
     } else {
@@ -192,3 +192,39 @@ userDao.getUserByIds({list: [10000, 100001] }, function(err, context) {
 });
 ```
 
+### Transaction
+
+You can run transactional tasks with a simpler manner.
+
+```
+var dataMapperConf = require('./conf/data-mapper-conf.json');
+var dataMapper = require('./../lib/data-mapper').init(dataMapperConf);
+
+var userDao = dataMapper.dao('user');
+var Transaction = dataMapper.Transaction;
+
+var transaction = new Transaction([
+    userDao.$find({name: 'userName'}),
+    function (context, next) {
+        var user = context.result();
+        if (!user) {
+            next('unknown user');
+        } else {
+            context.data('userId', user.userId);
+            next();
+        }
+    },
+    function(context, next) {
+        var id = context.data('userId');
+        userDao.$remove({userId: id}, next, context);
+    },
+    userdao.$save({userId: genId(), userName: 'newUser', userPhone: 'phone#'})
+]);
+transaction.start(function (err, context) { 
+    if(err) {
+        // handle error
+    } else {
+        console.log('success');
+    }
+});
+```
