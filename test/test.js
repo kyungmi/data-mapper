@@ -4,7 +4,7 @@
 
 'use strict';
 
-var assert  = require('assert');
+var assert = require('assert');
 var dataMapperConf = require('./conf/data-mapper-conf.json');
 var dataMapper = require('./../lib/data-mapper').init(dataMapperConf);
 var _ = require('lodash');
@@ -36,34 +36,34 @@ describe('Use useDao', function () {
 
     describe('use transaction', function () {
         var userId = 1;
-        var updateUser = {id:userId, name: 'updatedUser', phone: 'updatephone', isAdmin: 0};
+        var updateUser = {id: userId, name: 'updatedUser', phone: 'updatephone', isAdmin: 0};
         var transaction = new Transaction([
-            userDao.deleteAllUser({userId: 1}),
-            userDao.getUsers({}),
-            function(context, next){
-                if(!_.isEmpty(context.result())){
-                    var maxUser = _.max(context.result(), function(user){
+            /*userDao.deleteAllUser(),*/
+            userDao.getUsers(),
+            function (context, next) {
+                if (!_.isEmpty(context.result())) {
+                    var maxUser = _.max(context.result(), function (user) {
                         return user.userId;
                     });
                     userId = maxUser.userId + 1;
                     updateUser.id = userId;
                 }
-                userDao.addUser({id:userId, name:'newUser', phone: '12342321321312', isAdmin: 1}, function(err){
+                userDao.addUser({id: userId, name: 'newUser', phone: '12342321321312', isAdmin: 1}, function (err) {
                     context.data('userId', userId);
-                    next(err);
+                    next(err, context);
                 }, context);
             },
-            function(context, next) {
-                userDao.modifyUser(updateUser, function(err/*, result*/){
-                    next(err);
+            function (context, next) {
+                userDao.modifyUser(updateUser, function (err) {
+                    next(err, context);
                 }, context);
             }
         ]);
-        it('user', function(done){
+        it('user', function (done) {
             transaction.start(function (err, context) {
                 if (!err) {
                     userDao.getUserById({id: context.data('userId')}, function (err2, context) {
-                        if(err2){
+                        if (err2) {
                             done(err2);
                         } else {
                             var result = context.result();
@@ -82,41 +82,46 @@ describe('Use useDao', function () {
         });
     });
     describe('use default method', function () {
-        it('$find', function(done){
-           userDao.$find({userId: 1}, function(err, context){
-               var result = context.result();
-               assert.equal(result instanceof Array, true);
-               assert.equal(result[0].userId, 1);
-               done(err);
-           });
+        it('$find', function (done) {
+            userDao.$find({userId: 1}, function (err, context) {
+                var result = context.result();
+                assert.equal(result instanceof Array, true);
+                assert.equal(result[0].userId, 1);
+                done(err);
+            });
         });
-        it('$findOne', function(done){
-            userDao.$findOne({userId: 1}, function(err, context){
+        it('$findOne', function (done) {
+            userDao.$findOne({userId: 1}, function (err, context) {
                 var result = context.result();
                 assert.equal(result instanceof Object, true);
                 assert.equal(result.userId, 1);
                 done(err);
             });
         });
-        it('$count', function(done){
-            userDao.$count({userId: 1}, function(err, context){
+        it('$count', function (done) {
+            userDao.$count({userId: 1}, function (err, context) {
                 var result = context.result();
                 assert.equal(typeof result, 'number');
                 assert.equal(result, 1);
                 done(err);
             });
         });
-        it('$remove', function(done){
-           userDao.$remove({userId: 1}, function(err, context){
-               var result = context.result();
-               assert.equal(result.affectedRows, 1);
-               done(err);
-           });
-        });
-        it('$save', function(done){
-            userDao.$save({userId: 1, userName: 'username1', userPhone: '111-222-3333', isAdmin: 1}, function(err, context){
+        it('$remove', function (done) {
+            userDao.$remove({userId: 1}, function (err, context) {
                 var result = context.result();
-                if(err){
+                assert.equal(result.affectedRows, 1);
+                done(err);
+            });
+        });
+        it('$save', function (done) {
+            userDao.$save({
+                userId: 1,
+                userName: 'username1',
+                userPhone: '111-222-3333',
+                isAdmin: 1
+            }, function (err, context) {
+                var result = context.result();
+                if (err) {
                     done(err);
                 } else {
                     assert.equal(result.affectedRows, 1);
@@ -131,10 +136,13 @@ describe('Use useDao', function () {
                 }
             });
         });
-        it('$update', function(done){
-            userDao.$update({userId: 1, $set: {userName: 'username1-up', userPhone: '111-222-4444', isAdmin: 0}}, function(err, context){
+        it('$update', function (done) {
+            userDao.$update({
+                userId: 1,
+                $set: {userName: 'username1-up', userPhone: '111-222-4444', isAdmin: 0}
+            }, function (err, context) {
                 var result = context.result();
-                if(err){
+                if (err) {
                     done(err);
                 } else {
                     assert.equal(result.affectedRows, 1);
@@ -150,11 +158,11 @@ describe('Use useDao', function () {
             });
         });
     });
-    describe('foreach', function() {
-        it('foreach', function(done){
-            userDao.getUserByIds({list:[1,2,3,4]}, function(err, context){
+    describe('foreach', function () {
+        it('foreach', function (done) {
+            userDao.getUserByIds({list: [1, 2, 3, 4]}, function (err, context) {
                 var result = context.result();
-                if(!err) {
+                if (!err) {
                     assert.equal(result.length <= 4, true);
                     for (var i = 0; i < result.length; i++) {
                         assert.equal([1, 2, 3, 4].indexOf(result[i].userId) > -1, true);
