@@ -50,12 +50,12 @@ describe('Use useDao', function () {
                 }
                 userDao.addUser({id: userId, name: 'newUser', phone: '12342321321312', isAdmin: 1}, function (err) {
                     context.data('userId', userId);
-                    next(err, context);
+                    next(err);
                 }, context);
             },
             function (context, next) {
                 userDao.modifyUser(updateUser, function (err) {
-                    next(err, context);
+                    next(err);
                 }, context);
             }
         ]);
