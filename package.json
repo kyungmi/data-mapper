@@ -1,6 +1,6 @@
 {
     "name": "data-mapper",
-    "version": "0.1.12",
+    "version": "0.1.13",
     "description": "mybatis-like data mapper for javascript",
     "author": "Kyungmi Koong <purecolor85@gmail.com>",
     "scripts": {
